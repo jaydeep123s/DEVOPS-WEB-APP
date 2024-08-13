@@ -1,48 +1,36 @@
 pipeline {
-    agent any
+    agent any 
     stages {
-        stage('Checkout') {
+        stage('Build') { 
             steps {
-                git branch: 'main', url: 'https://github.com/jaydeep123s/DEVOPS-WEB-APP.git', credentialsId: 'github-pat'
+                script {
+                    echo 'Building the application...'
+                    sh 'pip install -r requirements.txt'
+                }
             }
         }
-        stage('Print Environment') {
+        stage('Test') { 
             steps {
-                sh 'echo $PATH'
-                sh 'which npm'
-                sh 'npm -v'
+                script {
+                    echo 'Running tests...'
+                    sh 'python -m unittest discover -s tests'
+                }
             }
         }
-        stage('Install Dependencies') {
+        stage('Deploy') { 
             steps {
-                sh 'npm install'
+                script {
+                    echo 'Deploying the application...'
+                    sh '''
+                    ssh -i /path/to/your/key.pem ubuntu@your-ec2-public-ip << EOF
+                        cd /path/to/your/app
+                        git pull origin main
+                        pip install -r requirements.txt
+                        sudo systemctl restart your-app-service
+                    EOF
+                    '''
+                }
             }
-        }
-        stage('Build') {
-            steps {
-                // Replace with the correct script name if needed
-                sh 'npm run start'  // Or use another appropriate script
-            }
-        }
-        stage('Test') {
-            steps {
-                // Run tests
-                sh 'npm test'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                // Replace with your deployment command
-                sh 'scp -i /path/to/your/private-key -r build/ user@your-server:/path/to/deploy'
-            }
-        }
-    }
-    post {
-        success {
-            echo 'Pipeline succeeded!'
-        }
-        failure {
-            echo 'Pipeline failed.'
         }
     }
 }
