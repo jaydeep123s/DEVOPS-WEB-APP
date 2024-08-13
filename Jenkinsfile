@@ -20,8 +20,8 @@ pipeline {
         }
         stage('Build') {
             steps {
-                // Assuming you have a build script defined in package.json
-                sh 'npm run build'
+                // Replace with the correct script name if needed
+                sh 'npm run start'  // Or use another appropriate script
             }
         }
         stage('Test') {
@@ -33,7 +33,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 // Replace with your deployment command
-                // For example, if deploying to a remote server
                 sh 'scp -i /path/to/your/private-key -r build/ user@your-server:/path/to/deploy'
             }
         }
