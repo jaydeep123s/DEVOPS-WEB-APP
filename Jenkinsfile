@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        DEPLOYMENT_IP = "YOUR_COMPUTE_ENGINE_IP"
-        DEPLOYMENT_USER = "your-ssh-username"
-        DEPLOYMENT_KEY = credentials('your-ssh-key-id')
+        DEPLOYMENT_IP = "54.69.190.62"  // Replace with your actual EC2 instance IP
+        DEPLOYMENT_USER = "ubuntu"      // Your EC2 user, which is 'ubuntu' in this case
+        DEPLOYMENT_KEY = credentials('my-ssh-deploy-key')  // The ID of your SSH private key
     }
 
     stages {
@@ -42,7 +42,7 @@ pipeline {
                 expression { currentBuild.result == 'SUCCESS' }
             }
             steps {
-                // Deploy to Compute Engine instance
+                // Deploy to EC2 instance
                 sh '''
                     scp -i ${DEPLOYMENT_KEY} -o StrictHostKeyChecking=no -r . ${DEPLOYMENT_USER}@${DEPLOYMENT_IP}:/path/to/deployment/
                     ssh -i ${DEPLOYMENT_KEY} -o StrictHostKeyChecking=no ${DEPLOYMENT_USER}@${DEPLOYMENT_IP} "cd /path/to/deployment && npm install && pm2 restart all"
