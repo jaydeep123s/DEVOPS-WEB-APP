@@ -2,10 +2,12 @@
   "name": "your-app",
   "version": "1.0.0",
   "scripts": {
+    "start": "node index.js",
     "build": "your-build-command",
     "test": "your-test-command"
   },
   "dependencies": {
-    // Your dependencies here
+    "express": "^4.17.1",
+    "mongoose": "^5.10.9"
   }
 }
